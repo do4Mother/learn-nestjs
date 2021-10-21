@@ -15,7 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -32,14 +32,7 @@ export class UsersController {
     @Query('skip') skip?: number,
     @Query('take') take?: number,
     @Query('cursor') cursor?: Prisma.UserWhereUniqueInput,
-    @Query('orderBy') orderBy?: string,
   ): Promise<User[]> {
-    if (orderBy) {
-      const getSort = orderBy.split(' ');
-      orderBy[getSort[0]] = getSort[1];
-      const test: Prisma.UserOrderByWithRelationInput
-    }
-
     return this.usersService.findAll({ skip, take, cursor });
   }
 

@@ -20,6 +20,9 @@ export class UserEntity implements User {
   @ApiProperty()
   username: string;
 
+  @ApiProperty()
+  password: string;
+
   @ApiProperty({ required: false })
   role: Role;
 }
