@@ -42,7 +42,11 @@ export class UsersService {
   async findOne(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
   ): Promise<User | null> {
-    return this.prisma.user.findUnique({ where: userWhereUniqueInput });
+    const user = await this.prisma.user.findUnique({
+      where: userWhereUniqueInput,
+    });
+    delete user.password;
+    return user;
   }
 
   async update(params: {
