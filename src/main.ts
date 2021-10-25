@@ -11,6 +11,7 @@ async function bootstrap() {
     .setTitle('Startup Swagger')
     .setDescription('The startup API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   app.useGlobalPipes(new ValidationPipe());

@@ -8,8 +8,16 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -27,6 +35,8 @@ export class UsersController {
   }
 
   @ApiOkResponse({ type: UserEntity, isArray: true })
+  @ApiQuery({ name: 'skip', required: false })
+  @ApiQuery({ name: 'take', required: false })
   @Get()
   findAll(
     @Query('skip') skip?: number,
@@ -42,6 +52,8 @@ export class UsersController {
     return this.usersService.findOne({ id: +id });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   @Patch(':id')
   update(
@@ -51,6 +63,8 @@ export class UsersController {
     return this.usersService.update({ where: { id: +id }, data: updateUser });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   @Delete(':id')
   remove(@Param('id') id: string): Promise<User> {
