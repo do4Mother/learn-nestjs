@@ -11,7 +11,9 @@ export class UsersService {
 
   async create(data: CreateUserDto): Promise<User> {
     data.password = await bcrypt.hash(data.password, 9);
-    return this.prisma.user.create({ data: data });
+    const user = await this.prisma.user.create({ data: data });
+    delete user.password;
+    return user;
   }
 
   async findAll(params: {
@@ -22,13 +24,19 @@ export class UsersService {
     orderBy?: Prisma.UserOrderByWithRelationInput;
   }): Promise<User[]> {
     const { skip, take, cursor, where, orderBy } = params;
-    return this.prisma.user.findMany({
+    const getUsers = await this.prisma.user.findMany({
       skip,
       take,
       cursor,
       where,
       orderBy,
     });
+
+    for (let i = 0; i < getUsers.length; i++) {
+      delete getUsers[i].password;
+    }
+
+    return getUsers;
   }
 
   async findOne(
@@ -37,18 +45,22 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: userWhereUniqueInput });
   }
 
-  update(params: {
+  async update(params: {
     where: Prisma.UserWhereUniqueInput;
     data: UpdateUserDto;
   }): Promise<User> {
     const { where, data } = params;
-    return this.prisma.user.update({
+    const user = await this.prisma.user.update({
       data,
       where,
     });
+    delete user.password;
+    return user;
   }
 
-  remove(where: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.delete({ where });
+  async remove(where: Prisma.UserWhereUniqueInput) {
+    const user = await this.prisma.user.delete({ where });
+    delete user.password;
+    return user;
   }
 }
