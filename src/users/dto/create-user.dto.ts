@@ -1,6 +1,12 @@
 import { Role } from '.prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsAlphanumeric, IsEmail, MaxLength, MinLength } from 'class-validator';
+import {
+  IsAlphanumeric,
+  IsEmail,
+  IsEnum,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -20,5 +26,7 @@ export class CreateUserDto {
   @MaxLength(16)
   password: string;
 
+  @ApiProperty()
+  @IsEnum(Role)
   role?: Role;
 }
