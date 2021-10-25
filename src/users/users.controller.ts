@@ -22,6 +22,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { User as UserReq } from './decorator/user.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -37,8 +38,6 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity, isArray: true })
   @ApiQuery({ name: 'skip', required: false })
   @ApiQuery({ name: 'take', required: false })
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @Get()
   findAll(
     @Query('skip') skip?: number,
@@ -46,6 +45,15 @@ export class UsersController {
     @Query('cursor') cursor?: Prisma.UserWhereUniqueInput,
   ): Promise<User[]> {
     return this.usersService.findAll({ skip, take, cursor });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: UserEntity })
+  @ApiBearerAuth()
+  @Get('me')
+  me(@UserReq() user: UserEntity) {
+    delete user.password;
+    return user;
   }
 
   @ApiOkResponse({ type: UserEntity })
