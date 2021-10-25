@@ -37,6 +37,8 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity, isArray: true })
   @ApiQuery({ name: 'skip', required: false })
   @ApiQuery({ name: 'take', required: false })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Get()
   findAll(
     @Query('skip') skip?: number,

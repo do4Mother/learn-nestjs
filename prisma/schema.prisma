@@ -28,14 +28,23 @@ enum Role {
 }
 
 model Product {
-  id             String   @unique @default(uuid())
-  created_at     DateTime @default(now())
-  updated_at     DateTime @updatedAt
-  images         String?
+  id             String         @unique @default(uuid())
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+  images         ProductImage[]
   name           String
   description    String?
-  price          Int      @default(0)
-  discount_price Int      @default(0)
-  user           User     @relation(fields: [userId], references: [id])
+  price          Int            @default(0)
+  discount_price Int            @default(0)
+  user           User           @relation(fields: [userId], references: [id])
   userId         Int
+}
+
+model ProductImage {
+  id          Int      @id @default(autoincrement())
+  name        String
+  url         String
+  isThumbnail Boolean  @default(false)
+  Product     Product? @relation(fields: [productId], references: [id])
+  productId   String?
 }
