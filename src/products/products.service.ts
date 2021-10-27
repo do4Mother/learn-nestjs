@@ -1,3 +1,4 @@
+import { Prisma } from '.prisma/client';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -19,12 +20,27 @@ export class ProductsService {
     });
   }
 
-  findAll() {
-    return `This action returns all products`;
+  findAll(params: {
+    skip?: number;
+    take?: number;
+    cursor?: string;
+    where?: Prisma.ProductWhereInput;
+    orderBy?: Prisma.UserOrderByWithRelationInput;
+  }) {
+    const { skip, take, cursor, where, orderBy } = params;
+    return this.prisma.product.findMany({
+      skip,
+      take,
+      cursor: {
+        id: cursor,
+      },
+      where,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: string) {
+    return this.prisma.product.findUnique({ where: { id } });
   }
 
   update(id: string, updateProductDto: UpdateProductDto) {
@@ -41,7 +57,7 @@ export class ProductsService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  remove(id: string) {
+    return this.prisma.product.delete({ where: { id } });
   }
 }
