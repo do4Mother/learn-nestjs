@@ -8,6 +8,7 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest();
 
     switch (exception.code) {
       case 'P2002':
@@ -21,8 +22,18 @@ export class PrismaClientExceptionFilter extends BaseExceptionFilter {
         });
         break;
 
+      case 'P2025':
+        response.status(HttpStatus.NOT_FOUND).json({
+          statusCode: HttpStatus.NOT_FOUND,
+          message: `There is no data with id ${request.params.id}`,
+        });
+        break;
+
       default:
-        super.catch(exception, host);
+        response.status(HttpStatus.CONFLICT).json({
+          statusCode: HttpStatus.CONFLICT,
+          message: `There is some error with server - ${exception.code}`,
+        });
         break;
     }
   }
