@@ -15,6 +15,9 @@ export class ProductEntity implements Product {
   images: ProductImage[];
 
   @ApiProperty()
+  thumbnail: number;
+
+  @ApiProperty()
   name: string;
 
   @ApiProperty({ required: false })
