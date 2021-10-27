@@ -32,6 +32,7 @@ model Product {
   created_at     DateTime       @default(now())
   updated_at     DateTime       @updatedAt
   images         ProductImage[]
+  thumbnail      Int?
   name           String
   description    String?
   price          Int            @default(0)
@@ -41,10 +42,9 @@ model Product {
 }
 
 model ProductImage {
-  id          Int      @id @default(autoincrement())
-  name        String
-  url         String
-  isThumbnail Boolean  @default(false)
-  Product     Product? @relation(fields: [productId], references: [id])
-  productId   String?
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
