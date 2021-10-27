@@ -1,4 +1,4 @@
-import { Prisma, User } from '.prisma/client';
+import { User } from '.prisma/client';
 import {
   Body,
   Controller,
@@ -18,11 +18,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { User as UserReq } from './decorator/user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserEntity } from './entities/user.entity';
 import { UsersService } from './users.service';
-import { User as UserReq } from './decorator/user.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -42,7 +42,7 @@ export class UsersController {
   findAll(
     @Query('skip') skip?: number,
     @Query('take') take?: number,
-    @Query('cursor') cursor?: Prisma.UserWhereUniqueInput,
+    @Query('cursor') cursor?: number,
   ): Promise<User[]> {
     return this.usersService.findAll({ skip, take, cursor });
   }
